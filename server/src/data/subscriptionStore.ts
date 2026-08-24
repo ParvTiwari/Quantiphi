@@ -25,7 +25,7 @@ export class SubscriptionStore {
       {
         id: 'sub_1',
         name: 'Netflix Premium 4K',
-        cost: 15.49,
+        cost: 649.00,
         billingCycle: 'monthly',
         renewalDate: offsetDateString(3), // In 3 days -> "Renewing Soon"
         status: 'active',
@@ -33,8 +33,8 @@ export class SubscriptionStore {
       },
       {
         id: 'sub_2',
-        name: 'Spotify Family',
-        cost: 16.99,
+        name: 'Spotify Premium',
+        cost: 119.00,
         billingCycle: 'monthly',
         renewalDate: offsetDateString(18), // In 18 days
         status: 'active',
@@ -43,17 +43,17 @@ export class SubscriptionStore {
       {
         id: 'sub_3',
         name: 'AWS Cloud Hosting',
-        cost: 120.00,
-        billingCycle: 'yearly', // Yearly $120 -> $10.00/mo
+        cost: 9600.00,
+        billingCycle: 'yearly', // Yearly ₹9600 -> ₹800.00/mo
         renewalDate: offsetDateString(5), // In 5 days -> "Renewing Soon"
         status: 'active',
-        category: 'Infrastructure',
+        category: 'Cloud & Infra',
       },
       {
         id: 'sub_4',
         name: 'GitHub Copilot Pro',
-        cost: 100.00,
-        billingCycle: 'yearly', // Yearly $100 -> $8.33/mo
+        cost: 8400.00,
+        billingCycle: 'yearly', // Yearly ₹8400 -> ₹700.00/mo
         renewalDate: offsetDateString(25),
         status: 'paused', // Paused to test vibe check savings
         category: 'Developer Tools',
@@ -61,7 +61,7 @@ export class SubscriptionStore {
       {
         id: 'sub_5',
         name: 'Figma Professional',
-        cost: 15.00,
+        cost: 1250.00,
         billingCycle: 'monthly',
         renewalDate: offsetDateString(12),
         status: 'active',
@@ -70,8 +70,8 @@ export class SubscriptionStore {
       {
         id: 'sub_6',
         name: 'Notion Team Plus',
-        cost: 96.00,
-        billingCycle: 'yearly', // Yearly $96 -> $8.00/mo
+        cost: 7800.00,
+        billingCycle: 'yearly', // Yearly ₹7800 -> ₹650.00/mo
         renewalDate: offsetDateString(6), // In 6 days -> "Renewing Soon"
         status: 'active',
         category: 'Productivity',
@@ -90,7 +90,6 @@ export class SubscriptionStore {
 
   public getAll(): EnrichedSubscription[] {
     const list = Array.from(this.subscriptions.values());
-    // Enrich with calculations
     return list.map(sub => this.enrichSubscription(sub));
   }
 
@@ -161,7 +160,6 @@ export class SubscriptionStore {
     const subs = Array.from(this.subscriptions.values());
     const financial = CostUniformityEngine.calculateFinancialMetrics(subs);
 
-    // Count upcoming renewals among active subscriptions (or all active subs renewing within <= 7 days)
     const upcomingRenewalsAlertCount = subs.filter(sub => {
       if (sub.status !== 'active') return false;
       return DateIntersectCalculator.isRenewingSoon(sub.renewalDate);
