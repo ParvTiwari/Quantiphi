@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { MetricsRow } from './components/MetricsRow';
 import { SubscriptionForm } from './components/SubscriptionForm';
+import { SubscriptionGrid } from './components/SubscriptionGrid';
 import { subscriptionApi } from './services/api';
 import { Subscription, DashboardMetrics, CreateSubscriptionInput } from './types/subscription';
 
@@ -39,6 +40,48 @@ export default function App() {
     setMetrics(newMetrics);
   };
 
+  // "The Vibe Check" toggle handler with optimistic instant UI update
+  const handleToggleStatus = async (id: string) => {
+    // 1. Optimistic update
+    setSubscriptions((prev) =>
+      prev.map((sub) =>
+        sub.id === id
+          ? {
+              ...sub,
+              status: sub.status === 'active' ? 'paused' : 'active',
+            }
+          : sub
+      )
+    );
+
+    try {
+      // 2. Sync with backend calculation engine
+      const { subscription: updatedSub, metrics: newMetrics } = await subscriptionApi.toggleStatus(id);
+      setSubscriptions((prev) =>
+        prev.map((sub) => (sub.id === id ? updatedSub : sub))
+      );
+      setMetrics(newMetrics);
+    } catch (err) {
+      console.error('Toggle error:', err);
+      // Rollback on error
+      fetchData();
+    }
+  };
+
+  const handleDeleteSubscription = async (id: string) => {
+    const originalSubs = [...subscriptions];
+    // Optimistic removal
+    setSubscriptions((prev) => prev.filter((s) => s.id !== id));
+
+    try {
+      const { metrics: newMetrics } = await subscriptionApi.delete(id);
+      setMetrics(newMetrics);
+    } catch (err) {
+      console.error('Delete error:', err);
+      setSubscriptions(originalSubs);
+    }
+  };
+
   const handleResetDemoData = async () => {
     try {
       setIsLoading(true);
@@ -61,16 +104,16 @@ export default function App() {
         totalSubs={subscriptions.length}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {error && (
-          <div className="mb-6 p-4 rounded-2xl bg-red-950/40 border border-red-800/80 text-red-300 text-sm flex items-center justify-between shadow-lg">
+          <div className="p-4 rounded-2xl bg-red-950/40 border border-red-800/80 text-red-300 text-sm flex items-center justify-between shadow-lg">
             <div>
               <p className="font-semibold">Backend Connection Notice</p>
               <p className="text-xs text-red-400 mt-0.5">{error}. Ensure the API server is running (`npm run dev:server`).</p>
             </div>
             <button
               onClick={fetchData}
-              className="px-3 py-1.5 rounded-lg bg-red-900/60 hover:bg-red-800 text-xs font-semibold text-white border border-red-700"
+              className="px-3 py-1.5 rounded-lg bg-red-900/60 hover:bg-red-800 text-xs font-semibold text-white border border-red-700 cursor-pointer"
             >
               Retry
             </button>
@@ -85,6 +128,16 @@ export default function App() {
         {/* 2. The Entry Form */}
         <section aria-label="Subscription Entry Form">
           <SubscriptionForm onAdd={handleAddSubscription} isLoading={isLoading} />
+        </section>
+
+        {/* 3. The Subscription Grid & The Vibe Check */}
+        <section aria-label="Subscription Grid">
+          <SubscriptionGrid
+            subscriptions={subscriptions}
+            onToggleStatus={handleToggleStatus}
+            onDelete={handleDeleteSubscription}
+            isLoading={isLoading}
+          />
         </section>
       </main>
 
