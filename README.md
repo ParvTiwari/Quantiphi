@@ -42,6 +42,200 @@
 
 ---
 
+## 🧮 Mathematical Logic & Formulas
+
+### 1. Cost Uniformity Engine
+Normalizes subscriptions with varying billing frequencies down to a standardized monthly burn rate:
+$$\text{Normalized Monthly Cost} = \begin{cases} \text{cost}, & \text{if billingCycle} = \text{"monthly"} \\ \text{round}\left(\frac{\text{cost}}{12}, 2\right), & \text{if billingCycle} = \text{"yearly"} \end{cases}$$
+
+### 2. Date Intersect & Alert Calculator
+Determines calendar days remaining from midnight reference date to next renewal date:
+$$\text{daysRemaining} = \text{round}\left(\frac{\text{renewalDate}_{\text{midnight}} - \text{currentDate}_{\text{midnight}}}{1000 \times 60 \times 60 \times 24}\right)$$
+$$\text{isRenewingSoon} = (0 \le \text{daysRemaining} \le 7)$$
+
+### 3. Top Metrics Aggregation
+$$\text{Total Monthly Burn Rate} = \sum_{s \in \text{Active Subscriptions}} \text{normalizedMonthlyCost}(s)$$
+$$\text{Paused Monthly Savings} = \sum_{s \in \text{Paused Subscriptions}} \text{normalizedMonthlyCost}(s)$$
+$$\text{Upcoming Renewals Alert Count} = \sum_{s \in \text{Active Subscriptions}} \mathbb{I}(\text{isRenewingSoon}(s))$$
+
+---
+
+## 📡 Complete REST API Documentation
+
+Base URL: `http://localhost:5000/api`
+
+### 1. `GET /api/subscriptions`
+Retrieve all stored subscriptions enriched with computed normalized costs, days remaining, and urgency flags.
+
+**Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "sub_1",
+      "name": "Netflix Premium 4K",
+      "cost": 649.00,
+      "billingCycle": "monthly",
+      "renewalDate": "2026-08-27",
+      "status": "active",
+      "category": "Entertainment",
+      "normalizedMonthlyCost": 649.00,
+      "daysRemaining": 3,
+      "isRenewingSoon": true,
+      "urgencyBadgeText": "Renewing Soon (3d)",
+      "createdAt": "2026-08-24T14:30:00.000Z",
+      "updatedAt": "2026-08-24T14:30:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### 2. `GET /api/subscriptions/metrics`
+Retrieve calculated dashboard summary metrics.
+
+**Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "data": {
+    "totalMonthlyBurnRate": 3468.00,
+    "pausedMonthlySavings": 700.00,
+    "upcomingRenewalsAlertCount": 3,
+    "activeCount": 5,
+    "pausedCount": 1,
+    "totalCount": 6,
+    "annualBurnRate": 41616.00
+  }
+}
+```
+
+---
+
+### 3. `POST /api/subscriptions`
+Create a new recurring subscription.
+
+**Request Body:**
+```json
+{
+  "name": "ChatGPT Plus",
+  "cost": 1999.00,
+  "billingCycle": "monthly",
+  "renewalDate": "2026-09-10",
+  "status": "active",
+  "category": "AI Tools"
+}
+```
+
+**Response (`201 Created`):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "sub_1787585000_abc12",
+    "name": "ChatGPT Plus",
+    "cost": 1999.00,
+    "billingCycle": "monthly",
+    "renewalDate": "2026-09-10",
+    "status": "active",
+    "category": "AI Tools",
+    "normalizedMonthlyCost": 1999.00,
+    "daysRemaining": 17,
+    "isRenewingSoon": false,
+    "urgencyBadgeText": "17 days left"
+  },
+  "metrics": {
+    "totalMonthlyBurnRate": 5467.00,
+    "pausedMonthlySavings": 700.00,
+    "upcomingRenewalsAlertCount": 3,
+    "activeCount": 6,
+    "pausedCount": 1,
+    "totalCount": 7,
+    "annualBurnRate": 65604.00
+  }
+}
+```
+
+---
+
+### 4. `PATCH /api/subscriptions/:id/toggle`
+**The Vibe Check**: Toggles active status (`active` ↔ `paused`), automatically recalculating active burn rate and savings.
+
+**Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "sub_1",
+    "name": "Netflix Premium 4K",
+    "status": "paused",
+    "normalizedMonthlyCost": 649.00
+  },
+  "metrics": {
+    "totalMonthlyBurnRate": 2819.00,
+    "pausedMonthlySavings": 1349.00,
+    "upcomingRenewalsAlertCount": 2,
+    "activeCount": 4,
+    "pausedCount": 2,
+    "totalCount": 6,
+    "annualBurnRate": 33828.00
+  }
+}
+```
+
+---
+
+### 5. `PUT /api/subscriptions/:id`
+Update an existing subscription's properties.
+
+**Request Body:**
+```json
+{
+  "name": "Netflix Premium 4K Family",
+  "cost": 749.00,
+  "billingCycle": "monthly",
+  "renewalDate": "2026-08-30",
+  "category": "Entertainment"
+}
+```
+
+**Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "data": { "id": "sub_1", "name": "Netflix Premium 4K Family", "cost": 749.00 },
+  "metrics": { "totalMonthlyBurnRate": 3568.00 }
+}
+```
+
+---
+
+### 6. `DELETE /api/subscriptions/:id`
+Remove a subscription from the dashboard.
+
+**Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "message": "Subscription deleted successfully",
+  "metrics": { "totalMonthlyBurnRate": 2819.00 }
+}
+```
+
+---
+
+### 7. `POST /api/subscriptions/reset`
+Reset state to initial sample dataset.
+
+---
+
+### 8. `GET /api/health`
+Health check endpoint returning system status and timestamp.
+
+---
+
 ## 🏗️ Project Architecture
 
 ```
