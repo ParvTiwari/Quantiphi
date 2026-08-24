@@ -1,0 +1,21 @@
+{
+  "name": "subscription-tracker-renewal-dashboard",
+  "version": "1.0.0",
+  "description": "Personal finance dashboard tracking recurring subscriptions, renewal dates, and monthly burn rate.",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "build": "npm run build --workspace=server && npm run build --workspace=client",
+    "test": "npm run test --workspace=server",
+    "start": "npm run start --workspace=server"
+  },
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
