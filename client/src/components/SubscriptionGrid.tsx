@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { 
   AlertTriangle, 
   Trash2, 
+  Edit2,
   Search, 
   SlidersHorizontal, 
   Power, 
@@ -19,6 +20,7 @@ interface SubscriptionGridProps {
   subscriptions: Subscription[];
   onToggleStatus: (id: string) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
+  onEdit: (subscription: Subscription) => void;
   isLoading: boolean;
 }
 
@@ -29,6 +31,7 @@ export const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
   subscriptions,
   onToggleStatus,
   onDelete,
+  onEdit,
   isLoading,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -377,14 +380,24 @@ export const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
 
                     {/* 6. Actions */}
                     <td className="py-4 px-4 text-right">
-                      <button
-                        onClick={() => handleDelete(sub.id, sub.name)}
-                        disabled={deletingId === sub.id || isLoading}
-                        title="Delete subscription"
-                        className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-950/30 border border-transparent hover:border-red-800/40 transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center justify-end space-x-1">
+                        <button
+                          onClick={() => onEdit(sub)}
+                          disabled={isLoading}
+                          title={`Edit ${sub.name}`}
+                          className="p-2 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-slate-800 border border-transparent hover:border-slate-700 transition-colors"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(sub.id, sub.name)}
+                          disabled={deletingId === sub.id || isLoading}
+                          title={`Delete ${sub.name}`}
+                          className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-950/30 border border-transparent hover:border-red-800/40 transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

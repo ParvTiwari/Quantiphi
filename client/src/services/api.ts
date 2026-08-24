@@ -31,6 +31,20 @@ export const subscriptionApi = {
     return { subscription: json.data, metrics: json.metrics };
   },
 
+  async update(id: string, data: Partial<CreateSubscriptionInput>): Promise<{ subscription: Subscription; metrics: DashboardMetrics }> {
+    const res = await fetch(`${API_BASE}/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Failed to update subscription' }));
+      throw new Error(err.error || 'Failed to update subscription');
+    }
+    const json = await res.json();
+    return { subscription: json.data, metrics: json.metrics };
+  },
+
   async toggleStatus(id: string): Promise<{ subscription: Subscription; metrics: DashboardMetrics }> {
     const res = await fetch(`${API_BASE}/${id}/toggle`, {
       method: 'PATCH',

@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { MetricsRow } from './components/MetricsRow';
 import { SubscriptionForm } from './components/SubscriptionForm';
 import { SubscriptionGrid } from './components/SubscriptionGrid';
+import { EditSubscriptionModal } from './components/EditSubscriptionModal';
 import { subscriptionApi } from './services/api';
 import { Subscription, DashboardMetrics, CreateSubscriptionInput } from './types/subscription';
 
@@ -11,6 +12,10 @@ export default function App() {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Edit Modal State
+  const [editingSub, setEditingSub] = useState<Subscription | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -37,6 +42,19 @@ export default function App() {
   const handleAddSubscription = async (input: CreateSubscriptionInput) => {
     const { subscription, metrics: newMetrics } = await subscriptionApi.create(input);
     setSubscriptions((prev) => [subscription, ...prev]);
+    setMetrics(newMetrics);
+  };
+
+  const handleOpenEdit = (sub: Subscription) => {
+    setEditingSub(sub);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEdit = async (id: string, updates: Partial<CreateSubscriptionInput>) => {
+    const { subscription: updatedSub, metrics: newMetrics } = await subscriptionApi.update(id, updates);
+    setSubscriptions((prev) =>
+      prev.map((sub) => (sub.id === id ? updatedSub : sub))
+    );
     setMetrics(newMetrics);
   };
 
@@ -136,15 +154,24 @@ export default function App() {
             subscriptions={subscriptions}
             onToggleStatus={handleToggleStatus}
             onDelete={handleDeleteSubscription}
+            onEdit={handleOpenEdit}
             isLoading={isLoading}
           />
         </section>
       </main>
 
+      {/* Edit Subscription Modal */}
+      <EditSubscriptionModal
+        subscription={editingSub}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSave={handleSaveEdit}
+      />
+
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950/80 py-4 mt-auto">
         <div className="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
-          SubPulse Dashboard • Cost Uniformity Engine & Date Intersect Calculator Active
+          SubPulse Dashboard • Cost Uniformity Engine & Date Intersect Calculator Active • Persistent Storage Enabled
         </div>
       </footer>
     </div>

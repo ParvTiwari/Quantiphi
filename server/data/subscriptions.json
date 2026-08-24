@@ -1,0 +1,68 @@
+[
+  {
+    "id": "sub_1",
+    "name": "Netflix Premium 4K",
+    "cost": 649,
+    "billingCycle": "monthly",
+    "renewalDate": "2026-08-27",
+    "status": "active",
+    "category": "Entertainment",
+    "createdAt": "2026-08-24T14:55:01.431Z",
+    "updatedAt": "2026-08-24T14:55:01.431Z"
+  },
+  {
+    "id": "sub_2",
+    "name": "Spotify Premium",
+    "cost": 119,
+    "billingCycle": "monthly",
+    "renewalDate": "2026-09-11",
+    "status": "active",
+    "category": "Music & Audio",
+    "createdAt": "2026-08-24T14:55:01.431Z",
+    "updatedAt": "2026-08-24T14:55:01.431Z"
+  },
+  {
+    "id": "sub_3",
+    "name": "AWS Cloud Hosting",
+    "cost": 9600,
+    "billingCycle": "yearly",
+    "renewalDate": "2026-08-29",
+    "status": "active",
+    "category": "Cloud & Infra",
+    "createdAt": "2026-08-24T14:55:01.431Z",
+    "updatedAt": "2026-08-24T14:55:01.431Z"
+  },
+  {
+    "id": "sub_4",
+    "name": "GitHub Copilot Pro",
+    "cost": 8400,
+    "billingCycle": "yearly",
+    "renewalDate": "2026-09-18",
+    "status": "paused",
+    "category": "Developer Tools",
+    "createdAt": "2026-08-24T14:55:01.431Z",
+    "updatedAt": "2026-08-24T15:01:50.739Z"
+  },
+  {
+    "id": "sub_5",
+    "name": "Figma Professional",
+    "cost": 1250,
+    "billingCycle": "monthly",
+    "renewalDate": "2026-09-05",
+    "status": "active",
+    "category": "Design",
+    "createdAt": "2026-08-24T14:55:01.431Z",
+    "updatedAt": "2026-08-24T14:55:01.431Z"
+  },
+  {
+    "id": "sub_6",
+    "name": "Notion Team Pro",
+    "cost": 7800,
+    "billingCycle": "yearly",
+    "renewalDate": "2026-08-30",
+    "status": "active",
+    "category": "Productivity",
+    "createdAt": "2026-08-24T14:55:01.431Z",
+    "updatedAt": "2026-08-24T15:08:14.589Z"
+  }
+]

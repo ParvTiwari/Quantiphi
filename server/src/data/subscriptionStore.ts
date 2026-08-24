@@ -1,6 +1,11 @@
+import fs from 'fs';
+import path from 'path';
 import { Subscription, EnrichedSubscription, DashboardMetrics, CreateSubscriptionInput } from '../types/subscription.js';
 import { CostUniformityEngine } from '../services/costEngine.js';
 import { DateIntersectCalculator } from '../services/dateCalculator.js';
+
+const DATA_DIR = path.resolve(process.cwd(), 'data');
+const DATA_FILE = path.join(DATA_DIR, 'subscriptions.json');
 
 // Helper to generate dynamic seed dates relative to current date
 function offsetDateString(daysOffset: number): string {
@@ -16,7 +21,50 @@ export class SubscriptionStore {
   private subscriptions: Map<string, Subscription> = new Map();
 
   constructor() {
+    this.ensureDataDir();
+    this.loadFromDisk();
+  }
+
+  private ensureDataDir(): void {
+    try {
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+      }
+    } catch (err) {
+      console.error('Error creating data directory:', err);
+    }
+  }
+
+  private loadFromDisk(): void {
+    try {
+      if (fs.existsSync(DATA_FILE)) {
+        const fileContent = fs.readFileSync(DATA_FILE, 'utf-8');
+        const parsed: Subscription[] = JSON.parse(fileContent);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          this.subscriptions.clear();
+          for (const sub of parsed) {
+            this.subscriptions.set(sub.id, sub);
+          }
+          console.log(` Loaded ${this.subscriptions.size} subscriptions from ${DATA_FILE}`);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Could not read subscriptions.json, initializing fresh seed data:', err);
+    }
+
+    // Fallback to initial seed data
     this.seedDefaultData();
+  }
+
+  private saveToDisk(): void {
+    try {
+      this.ensureDataDir();
+      const list = Array.from(this.subscriptions.values());
+      fs.writeFileSync(DATA_FILE, JSON.stringify(list, null, 2), 'utf-8');
+    } catch (err) {
+      console.error('Error saving subscriptions to disk:', err);
+    }
   }
 
   public seedDefaultData(): void {
@@ -86,6 +134,8 @@ export class SubscriptionStore {
         updatedAt: now,
       });
     }
+
+    this.saveToDisk();
   }
 
   public getAll(): EnrichedSubscription[] {
@@ -115,6 +165,7 @@ export class SubscriptionStore {
     };
 
     this.subscriptions.set(id, newSub);
+    this.saveToDisk();
     return this.enrichSubscription(newSub);
   }
 
@@ -130,6 +181,7 @@ export class SubscriptionStore {
     };
 
     this.subscriptions.set(id, updated);
+    this.saveToDisk();
     return this.enrichSubscription(updated);
   }
 
@@ -149,11 +201,16 @@ export class SubscriptionStore {
     };
 
     this.subscriptions.set(id, updated);
+    this.saveToDisk();
     return this.enrichSubscription(updated);
   }
 
   public delete(id: string): boolean {
-    return this.subscriptions.delete(id);
+    const deleted = this.subscriptions.delete(id);
+    if (deleted) {
+      this.saveToDisk();
+    }
+    return deleted;
   }
 
   public getMetrics(): DashboardMetrics {
