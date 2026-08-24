@@ -130,17 +130,17 @@ export const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
           </div>
 
           {/* Sort By Dropdown */}
-          <div className="flex items-center space-x-1.5 bg-slate-950 px-2.5 py-1.5 rounded-xl border border-slate-700/80">
-            <ArrowUpDown className="w-3.5 h-3.5 text-slate-500" />
+          <div className="flex items-center space-x-1.5 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-700/80 shadow-inner">
+            <ArrowUpDown className="w-3.5 h-3.5 text-emerald-400" />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="bg-transparent text-xs text-slate-300 focus:outline-none cursor-pointer"
+              className="bg-slate-950 text-slate-100 font-medium text-xs focus:outline-none cursor-pointer [color-scheme:dark]"
             >
-              <option value="renewal-asc">Renewal: Soonest</option>
-              <option value="cost-desc">Cost: High to Low</option>
-              <option value="cost-asc">Cost: Low to High</option>
-              <option value="name">Name (A-Z)</option>
+              <option value="renewal-asc" className="bg-slate-900 text-slate-100 py-1.5">Renewal: Soonest</option>
+              <option value="cost-desc" className="bg-slate-900 text-slate-100 py-1.5">Cost: High to Low</option>
+              <option value="cost-asc" className="bg-slate-900 text-slate-100 py-1.5">Cost: Low to High</option>
+              <option value="name" className="bg-slate-900 text-slate-100 py-1.5">Name (A-Z)</option>
             </select>
           </div>
         </div>

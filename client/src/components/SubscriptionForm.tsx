@@ -186,10 +186,10 @@ export const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ onAdd, isLoa
               <select
                 value={billingCycle}
                 onChange={(e) => setBillingCycle(e.target.value as BillingCycle)}
-                className="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all appearance-none cursor-pointer"
+                className="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all appearance-none cursor-pointer [color-scheme:dark]"
               >
-                <option value="monthly">Monthly Billing</option>
-                <option value="yearly">Yearly / Annual Billing</option>
+                <option value="monthly" className="bg-slate-900 text-slate-100 py-1.5">Monthly Billing</option>
+                <option value="yearly" className="bg-slate-900 text-slate-100 py-1.5">Yearly / Annual Billing</option>
               </select>
               <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -245,21 +245,21 @@ export const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ onAdd, isLoa
 
           {/* Category & Submit Action */}
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-            <div className="flex items-center space-x-1.5 bg-slate-950 px-2.5 py-1 rounded-xl border border-slate-800">
-              <Tag className="w-3.5 h-3.5 text-slate-500" />
+            <div className="flex items-center space-x-1.5 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-700/80 text-xs shadow-inner">
+              <Tag className="w-3.5 h-3.5 text-emerald-400" />
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="bg-transparent text-xs text-slate-300 focus:outline-none cursor-pointer py-1"
+                className="bg-slate-950 text-slate-100 font-medium text-xs focus:outline-none cursor-pointer py-0.5 pr-2 [color-scheme:dark]"
               >
-                <option value="General">General</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Developer Tools">Developer Tools</option>
-                <option value="Productivity">Productivity</option>
-                <option value="Cloud & Infra">Cloud & Infra</option>
-                <option value="AI Tools">AI Tools</option>
-                <option value="Design">Design</option>
-                <option value="Music">Music</option>
+                <option value="General" className="bg-slate-900 text-slate-100 py-1.5">General</option>
+                <option value="Entertainment" className="bg-slate-900 text-slate-100 py-1.5">Entertainment</option>
+                <option value="Developer Tools" className="bg-slate-900 text-slate-100 py-1.5">Developer Tools</option>
+                <option value="Productivity" className="bg-slate-900 text-slate-100 py-1.5">Productivity</option>
+                <option value="Cloud & Infra" className="bg-slate-900 text-slate-100 py-1.5">Cloud & Infra</option>
+                <option value="AI Tools" className="bg-slate-900 text-slate-100 py-1.5">AI Tools</option>
+                <option value="Design" className="bg-slate-900 text-slate-100 py-1.5">Design</option>
+                <option value="Music" className="bg-slate-900 text-slate-100 py-1.5">Music</option>
               </select>
             </div>
 
