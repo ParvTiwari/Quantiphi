@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, IndianRupee, Calendar, Sparkles, Tag } from 'lucide-react';
+import { X, Save, IndianRupee, Sparkles, Tag } from 'lucide-react';
+import { DatePicker } from './DatePicker';
 import { Subscription, BillingCycle, CreateSubscriptionInput } from '../types/subscription';
 import { formatCurrency } from '../utils/formatters';
 
@@ -81,7 +82,7 @@ export const EditSubscriptionModal: React.FC<EditSubscriptionModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
       <div 
-        className="relative w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl shadow-black/80 overflow-hidden"
+        className="relative w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl shadow-black/80 overflow-visible"
         role="dialog"
         aria-modal="true"
         aria-labelledby="edit-subscription-title"
@@ -167,21 +168,12 @@ export const EditSubscriptionModal: React.FC<EditSubscriptionModalProps> = ({
           <div className="grid grid-cols-2 gap-3">
             {/* Renewal Date */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Next Renewal Date <span className="text-emerald-400">*</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
-                  <Calendar className="w-4 h-4" />
-                </div>
-                <input
-                  type="date"
-                  value={renewalDate}
-                  onChange={(e) => setRenewalDate(e.target.value)}
-                  required
-                  className="w-full bg-slate-950 border border-slate-700/90 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 [color-scheme:dark]"
-                />
-              </div>
+              <DatePicker
+                value={renewalDate}
+                onChange={setRenewalDate}
+                label="Next Renewal Date"
+                required
+              />
             </div>
 
             {/* Category */}

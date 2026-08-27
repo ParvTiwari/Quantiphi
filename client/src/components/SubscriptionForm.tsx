@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { PlusCircle, Calendar, IndianRupee, Tag, Check, Sparkles, AlertCircle } from 'lucide-react';
+import { PlusCircle, IndianRupee, Tag, Check, Sparkles, AlertCircle } from 'lucide-react';
+import { DatePicker } from './DatePicker';
 import { BillingCycle, CreateSubscriptionInput } from '../types/subscription';
 import { formatCurrency } from '../utils/formatters';
 
@@ -92,7 +93,7 @@ export const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ onAdd, isLoa
   };
 
   return (
-    <div className="rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-xl shadow-black/20 relative overflow-hidden mb-8">
+    <div className="rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-xl shadow-black/20 relative overflow-visible mb-8 z-10">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-5">
         <div>
           <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -201,21 +202,12 @@ export const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ onAdd, isLoa
 
           {/* 4. Visual Calendar Date Picker */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Next Renewal Date <span className="text-emerald-400">*</span>
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
-                <Calendar className="w-4 h-4" />
-              </div>
-              <input
-                type="date"
-                value={renewalDate}
-                onChange={(e) => setRenewalDate(e.target.value)}
-                required
-                className="w-full bg-slate-950 border border-slate-700/90 rounded-xl pl-9 pr-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all [color-scheme:dark]"
-              />
-            </div>
+            <DatePicker
+              value={renewalDate}
+              onChange={setRenewalDate}
+              label="Next Renewal Date"
+              required
+            />
           </div>
         </div>
 
