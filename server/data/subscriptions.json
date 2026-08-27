@@ -41,7 +41,7 @@
     "status": "paused",
     "category": "Developer Tools",
     "createdAt": "2026-08-24T14:55:01.431Z",
-    "updatedAt": "2026-08-24T15:01:50.739Z"
+    "updatedAt": "2026-08-24T15:17:56.772Z"
   },
   {
     "id": "sub_5",
@@ -64,5 +64,27 @@
     "category": "Productivity",
     "createdAt": "2026-08-24T14:55:01.431Z",
     "updatedAt": "2026-08-24T15:08:14.589Z"
+  },
+  {
+    "id": "sub_1787584621557_ddgw2",
+    "name": "Spotify Premium",
+    "cost": 600,
+    "billingCycle": "yearly",
+    "renewalDate": "2026-10-24",
+    "status": "active",
+    "category": "Music",
+    "createdAt": "2026-08-24T15:17:01.557Z",
+    "updatedAt": "2026-08-24T15:17:01.557Z"
+  },
+  {
+    "id": "sub_1787629275282_z04sy",
+    "name": "Google Cloud",
+    "cost": 5000,
+    "billingCycle": "monthly",
+    "renewalDate": "2026-08-24",
+    "status": "active",
+    "category": "General",
+    "createdAt": "2026-08-25T03:41:15.282Z",
+    "updatedAt": "2026-08-25T03:41:15.282Z"
   }
 ]
